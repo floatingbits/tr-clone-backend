@@ -17,4 +17,4 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
 
-Route::resource('/v1/boards', v1\BoardController::class);
+Route::resource('/v1/boards', v1\BoardController::class, ['except' => ['create', 'edit']]);

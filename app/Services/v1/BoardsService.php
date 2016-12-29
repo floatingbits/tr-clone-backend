@@ -9,6 +9,8 @@
 namespace App\Services\v1;
 
 use App\Board;
+use Illuminate\Http\Request;
+
 /**
  * Class BoardsService
  * 
@@ -18,6 +20,12 @@ class BoardsService {
     protected $supportedIncludes = [
         'cardLists' => 'lists'
     ];
+
+    /**
+     * @param $parameters
+     * @return array
+     * @author Sören Parton
+     */
     public function getBoards($parameters) {
         if (empty($parameters)) {
             return $this->filterBoards(Board::all());
@@ -32,10 +40,35 @@ class BoardsService {
         return $this->filterBoards(Board::with($withKeys)->get(), $withKeys);
 
     }
+
+    /**
+     * @param $id
+     * @return array
+     * @author Sören Parton
+     */
     public function getBoard($id) {
         return $this->filterBoards(Board::where('id', $id)->get());
     }
 
+    /**
+     * @param Request $request
+     * @return Board
+     * @author Sören Parton
+     */
+    public function createBoard(Request $request) {
+        $title = $request->input('title');
+        $board = new Board();
+        $board->title = $title;
+        $board->save();
+        return $board;
+    }
+
+    /**
+     * @param Board[] $boards
+     * @param array $withKeys
+     * @return array
+     * @author Sören Parton
+     */
     private function filterBoards($boards, $withKeys = array()) {
         $data = [];
         /**
