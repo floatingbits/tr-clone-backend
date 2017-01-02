@@ -47,7 +47,7 @@ class BoardsService {
      * @author Sören Parton
      */
     public function getBoard($id) {
-        return $this->filterBoards(Board::where('id', $id)->get());
+        return $this->filterBoards(Board::where('id', $id)->get(), array('cardLists'))[0];
     }
 
     /**
