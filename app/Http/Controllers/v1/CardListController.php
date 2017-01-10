@@ -2,35 +2,21 @@
 
 namespace App\Http\Controllers\v1;
 
-use App\Services\v1\BoardsService;
+use App\Services\v1\CardListsService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class BoardController extends Controller
+class CardListController extends Controller
 {
 
     /**
-     * @var \App\Services\v1\BoardsService
+     * @var \App\Services\v1\CardListsService
      */
-    protected $boards;
+    protected $cardLists;
 
-    public function __construct(BoardsService $service) {
-        $this->boards = $service;
+    public function __construct(CardListsService $service) {
+        $this->cardLists = $service;
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $parameters = request()->input();
-
-        return $this->boards->getBoards($parameters);
-    }
-
-
-
     /**
      * Store a newly created resource in storage.
      *
@@ -39,7 +25,7 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->boards->createBoard($request);
+        return $this->cardLists->createList($request);
     }
 
     /**
@@ -50,7 +36,7 @@ class BoardController extends Controller
      */
     public function show($id)
     {
-        return $this->boards->getBoard($id);
+        return $this->cardLists->getBoard($id);
     }
 
     /**
@@ -73,7 +59,7 @@ class BoardController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return $this->cardLists->updateList($request, $id);
     }
 
     /**

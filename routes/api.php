@@ -18,3 +18,5 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 Route::resource('/v1/boards', v1\BoardController::class, ['except' => ['create', 'edit']]);
+Route::resource('/v1/boards.lists', v1\BoardListController::class, ['only' => ['index']]);
+Route::resource('/v1/lists', v1\CardListController::class, ['except' => ['create', 'edit', 'index']]);

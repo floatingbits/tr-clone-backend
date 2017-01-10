@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CardList extends Model
 {
     public function cards() {
-        return $this->hasMany('App\CardList', 'card_list_id');
+        return $this->hasMany('App\Card', 'card_list_id');
     }
 
     public function board() {
