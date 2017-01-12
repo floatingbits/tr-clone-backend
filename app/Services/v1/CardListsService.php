@@ -27,7 +27,10 @@ class CardListsService {
      */
     public function getLists($boardId) {
         $withKeys = array('cards');
-        return $this->filterLists(CardList::with($withKeys)->where('board_id', $boardId)->orderBy('weight', 'DESC')->get());
+
+        return $this->filterLists(CardList::with(['cards' => function ($q) {
+               $q->orderBy('weight', 'asc');
+            }])->where('board_id', $boardId)->orderBy('weight', 'ASC')->get());
     }
 
     /**
@@ -76,11 +79,12 @@ class CardListsService {
     }
     /**
      * @param Request $request
-     * @return CardList
+     * @param int $id
+     * @return array
      * @author Sören Parton
      */
     public function updateList(Request $request, $id) {
-
+        /** @var CardList $list */
         $list = CardList::query()->find($id);
         $boardId = $request->input('boardId');
         if ($boardId) {
@@ -92,8 +96,30 @@ class CardListsService {
             $list->title = $title;
         }
         $weight = $request->input('weight');
-        if ($weight) {
-            $list->weight = 10;
+        if (!is_null($weight)) {
+            $list->weight = $weight;
+        }
+        $cards = $request->input('cards');
+        if ($cards) {
+            foreach ($cards as $card) {
+                if ($card['id']) {
+                    /** @var Card $storedCard */
+                    $cardModel = Card::query()->find($card['id']);
+                }
+                else {
+                    $cardModel = new Card();
+
+                }
+                $cardModel->cardList()->associate($list);
+                if (isset($card['weight'])) {
+                    $cardModel->weight = $card['weight'];
+                }
+                if (isset($card['title'])) {
+                    $cardModel->title = $card['title'];
+                }
+                $cardModel->save();
+
+            }
         }
 
         $list->save();
